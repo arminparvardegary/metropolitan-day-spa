@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Phone, Sparkles, Diamond } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -18,8 +17,6 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
-  const pathname = usePathname();
-  const isHome = pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,19 +26,10 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Always light text on dark/transparent backgrounds for Home/Scrolled
-  // Dark text on light backgrounds for inner pages (unscrolled)
-  const textColorClass = isScrolled || isHome 
-    ? "text-white/70 group-hover:text-white" 
-    : "text-charcoal-600 group-hover:text-charcoal-900";
-    
-  const logoTextColorClass = isScrolled || isHome 
-    ? "text-white" 
-    : "text-charcoal-900";
-
-  const phoneTextColorClass = isScrolled || isHome 
-    ? "text-white/60 hover:text-gold-400" 
-    : "text-charcoal-600 hover:text-gold-600";
+  // Always use light text since we have dark background everywhere
+  const textColorClass = "text-white/90 group-hover:text-gold-400";
+  const logoTextColorClass = "text-white";
+  const phoneTextColorClass = "text-white/80 hover:text-gold-400";
 
   return (
     <>
@@ -103,11 +91,7 @@ export default function Navbar() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className={`absolute inset-0 rounded-full transition-colors ${
-                          isScrolled || isHome 
-                            ? "bg-white/10" 
-                            : "bg-charcoal-900/5"
-                        }`}
+                        className="absolute inset-0 rounded-full bg-white/10"
                         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                       />
                     )}
@@ -151,11 +135,7 @@ export default function Navbar() {
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`lg:hidden relative z-50 w-12 h-12 backdrop-blur-sm rounded-full flex items-center justify-center border transition-colors ${
-                isScrolled || isHome
-                  ? "bg-white/10 border-white/20 text-white"
-                  : "bg-charcoal-900/5 border-charcoal-900/10 text-charcoal-900"
-              }`}
+              className="lg:hidden relative z-50 w-12 h-12 backdrop-blur-sm rounded-full flex items-center justify-center border bg-white/10 border-white/20 text-white"
               aria-label="Toggle menu"
             >
               <AnimatePresence mode="wait">
