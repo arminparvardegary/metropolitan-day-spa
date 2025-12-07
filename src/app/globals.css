@@ -11,30 +11,13 @@
   }
 
   body {
-    @apply bg-cream-50 text-charcoal-900 antialiased;
+    @apply bg-charcoal-950 text-white antialiased;
     cursor: auto;
     overflow-x: hidden;
   }
 
-  .theme-dark body {
-    background: #0b0b0f;
-    color: #f6f6f6;
-  }
-
-  .theme-dark .bg-white {
-    background-color: #0f1015 !important;
-  }
-
-  .theme-dark .text-charcoal-900 {
-    color: #f6f6f6 !important;
-  }
-
-  .theme-dark .bg-cream-50 {
-    background-color: #0f1015 !important;
-  }
-
   ::selection {
-    @apply bg-gold-400/30 text-charcoal-900;
+    @apply bg-gold-400/30 text-white;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -64,11 +47,7 @@
   }
 
   .glass {
-    @apply bg-white/80 backdrop-blur-xl border border-white/20;
-  }
-
-  .glass-dark {
-    @apply bg-charcoal-950/80 backdrop-blur-xl border border-white/10;
+    @apply bg-charcoal-900/80 backdrop-blur-xl border border-white/10;
   }
 }
 

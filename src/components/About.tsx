@@ -4,6 +4,9 @@ import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { useRef, useState, useEffect } from "react";
 import { Award, Users, Calendar, Sparkles, Heart, CheckCircle } from "lucide-react";
+import dynamic from "next/dynamic";
+
+const Lotus3D = dynamic(() => import("./Lotus3D"), { ssr: false });
 
 const stats = [
   { 
@@ -88,7 +91,12 @@ export default function About() {
   const textY = useTransform(scrollYProgress, [0, 1], [50, -50]);
 
   return (
-    <section id="about" ref={containerRef} className="relative py-32 overflow-hidden bg-white">
+    <section id="about" ref={containerRef} className="relative py-32 overflow-hidden bg-white dark:bg-charcoal-950">
+      {/* 3D Lotus Background */}
+      <div className="absolute top-0 right-0 w-1/2 h-full opacity-40 pointer-events-none hidden lg:block">
+        <Lotus3D />
+      </div>
+
       {/* Floating Orbs */}
       <motion.div
         animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
@@ -171,7 +179,7 @@ export default function About() {
                 <span className="text-gold-700 font-sans text-sm tracking-wide">About Us</span>
               </div>
 
-              <h2 className="font-serif text-4xl md:text-5xl text-charcoal-900 mb-6 leading-tight">
+              <h2 className="font-serif text-4xl md:text-5xl text-charcoal-900 dark:text-white mb-6 leading-tight">
                 Where Luxury Meets{" "}
                 <span className="relative inline-block">
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-500 to-gold-700">
@@ -186,13 +194,13 @@ export default function About() {
                 </span>
               </h2>
 
-              <p className="font-sans text-charcoal-600 text-lg leading-relaxed mb-6">
+              <p className="font-sans text-charcoal-600 dark:text-gray-300 text-lg leading-relaxed mb-6">
                 Nestled in the heart of New Jersey, Metropolitan Day Spa has been a sanctuary 
                 of wellness since 2009. Our commitment to excellence has made us a premier 
                 destination for those seeking the finest in spa treatments.
               </p>
 
-              <p className="font-sans text-charcoal-600 leading-relaxed mb-8">
+              <p className="font-sans text-charcoal-600 dark:text-gray-400 leading-relaxed mb-8">
                 We believe that true beauty radiates from within. Our holistic approach combines 
                 ancient wisdom with modern techniques, creating transformative experiences that 
                 nurture both body and soul.
@@ -206,7 +214,7 @@ export default function About() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={isInView ? { opacity: 1, x: 0 } : {}}
                     transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-                    className="flex items-center gap-2 text-charcoal-700"
+                    className="flex items-center gap-2 text-charcoal-700 dark:text-gray-300"
                   >
                     <CheckCircle className="w-5 h-5 text-gold-500 flex-shrink-0" />
                     <span className="font-sans text-sm">{feature}</span>
@@ -219,7 +227,7 @@ export default function About() {
                 href="/contact"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center gap-3 px-8 py-4 bg-charcoal-900 text-white rounded-full font-sans font-medium tracking-wide hover:bg-charcoal-800 transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-charcoal-900 dark:bg-gold-500 text-white dark:text-charcoal-900 rounded-full font-sans font-medium tracking-wide hover:bg-charcoal-800 dark:hover:bg-gold-400 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 <span>Discover Our Story</span>
                 <motion.span animate={{ x: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
@@ -246,7 +254,7 @@ export default function About() {
               whileHover={{ y: -5 }}
               className="group relative"
             >
-              <div className="relative p-8 rounded-3xl bg-cream-50 border border-cream-100 hover:border-gold-200 transition-all duration-300 overflow-hidden">
+              <div className="relative p-8 rounded-3xl bg-cream-50 dark:bg-charcoal-900 border border-cream-100 dark:border-charcoal-800 hover:border-gold-200 dark:hover:border-gold-700 transition-all duration-300 overflow-hidden">
                 {/* Gradient Background on Hover */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
                 
@@ -254,11 +262,11 @@ export default function About() {
                   <stat.icon className="w-6 h-6 text-white" />
                 </div>
                 
-                <div className="font-serif text-4xl lg:text-5xl text-charcoal-900 mb-2">
+                <div className="font-serif text-4xl lg:text-5xl text-charcoal-900 dark:text-white mb-2">
                   <AnimatedCounter value={stat.value} suffix={stat.suffix} />
                 </div>
                 
-                <span className="font-sans text-sm text-charcoal-600">
+                <span className="font-sans text-sm text-charcoal-600 dark:text-gray-400">
                   {stat.label}
                 </span>
               </div>

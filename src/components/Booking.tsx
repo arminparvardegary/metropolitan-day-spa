@@ -4,6 +4,9 @@ import { motion, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Calendar, Clock, User, Phone, Mail, Sparkles, CheckCircle, ChevronRight, UserCheck } from "lucide-react";
 import { useToast } from "./ToastProvider";
+import dynamic from "next/dynamic";
+
+const MinimalScene3D = dynamic(() => import("./MinimalScene3D"), { ssr: false });
 
 const services = [
   "Signature Massage",
@@ -41,7 +44,12 @@ export default function Booking() {
   }, []);
 
   return (
-    <section id="booking" className="relative py-32 overflow-hidden bg-gradient-to-b from-white to-cream-50">
+    <section id="booking" className="relative py-32 overflow-hidden bg-charcoal-950">
+      {/* 3D Background */}
+      <div className="absolute inset-0 pointer-events-none opacity-60">
+        <MinimalScene3D />
+      </div>
+
       {/* Background Decorations */}
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
@@ -56,13 +64,6 @@ export default function Booking() {
         />
       </div>
 
-      {/* Decorative Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23D4AF37' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }} />
-      </div>
-
       <div className="container-custom relative z-10" ref={ref}>
         {/* Section Header */}
         <motion.div
@@ -75,20 +76,20 @@ export default function Booking() {
             initial={{ scale: 0 }}
             animate={isInView ? { scale: 1 } : {}}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-gold-100 rounded-full mb-6"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gold-900/30 rounded-full mb-6"
           >
-            <Calendar className="w-4 h-4 text-gold-600" />
-            <span className="text-gold-700 font-sans text-sm tracking-wide">Book Your Visit</span>
+            <Calendar className="w-4 h-4 text-gold-400" />
+            <span className="text-gold-300 font-sans text-sm tracking-wide">Book Your Visit</span>
           </motion.div>
 
-          <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-charcoal-900 mb-6">
+          <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-white mb-6">
             Reserve Your{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-500 to-gold-700">
               Escape
             </span>
           </h2>
 
-          <p className="font-sans text-charcoal-600 text-lg">
+          <p className="font-sans text-gray-300 text-lg">
             Schedule your appointment and begin your journey to relaxation
           </p>
         </motion.div>
@@ -108,15 +109,15 @@ export default function Booking() {
                   formStep > step
                     ? "bg-gradient-to-r from-gold-500 to-gold-600 text-white"
                     : formStep === step
-                    ? "bg-charcoal-900 text-white"
-                    : "bg-cream-200 text-charcoal-500"
+                    ? "bg-gold-500 text-charcoal-900"
+                    : "bg-charcoal-700 text-gray-400"
                 }`}
               >
                 {formStep > step ? <CheckCircle className="w-5 h-5" /> : step}
               </motion.div>
               {step < 3 && (
                 <div className={`w-16 md:w-24 h-0.5 mx-2 transition-colors duration-300 ${
-                  formStep > step ? "bg-gold-500" : "bg-cream-200"
+                  formStep > step ? "bg-gold-500" : "bg-charcoal-700"
                 }`} />
               )}
             </div>
@@ -130,7 +131,7 @@ export default function Booking() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="max-w-4xl mx-auto"
         >
-          <div className="bg-white rounded-3xl shadow-xl shadow-charcoal-200/30 p-8 md:p-12 border border-cream-100">
+          <div className="bg-charcoal-900 rounded-3xl shadow-xl shadow-black/50 p-8 md:p-12 border border-charcoal-800">
             {/* Step 1: Select Service */}
             {formStep === 1 && (
               <motion.div
@@ -138,7 +139,7 @@ export default function Booking() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
               >
-                <h3 className="font-serif text-2xl text-charcoal-900 mb-6">
+                <h3 className="font-serif text-2xl text-white mb-6">
                   Choose Your Treatment
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
@@ -150,12 +151,12 @@ export default function Booking() {
                       onClick={() => setSelectedService(service)}
                       className={`p-4 rounded-2xl border-2 transition-all duration-300 text-left ${
                         selectedService === service
-                          ? "border-gold-500 bg-gold-50 shadow-md"
-                          : "border-cream-200 hover:border-gold-300"
+                          ? "border-gold-500 bg-gold-900/20 shadow-md"
+                          : "border-charcoal-700 hover:border-gold-700 bg-charcoal-800"
                       }`}
                     >
-                      <Sparkles className={`w-5 h-5 mb-2 ${selectedService === service ? "text-gold-600" : "text-charcoal-400"}`} />
-                      <span className={`font-sans text-sm ${selectedService === service ? "text-gold-700 font-medium" : "text-charcoal-700"}`}>
+                      <Sparkles className={`w-5 h-5 mb-2 ${selectedService === service ? "text-gold-400" : "text-charcoal-500"}`} />
+                      <span className={`font-sans text-sm ${selectedService === service ? "text-gold-400 font-medium" : "text-gray-300"}`}>
                         {service}
                       </span>
                     </motion.button>
@@ -167,7 +168,7 @@ export default function Booking() {
                       setSelectedService("Signature Massage");
                       setFormStep(2);
                     }}
-                    className="px-4 py-2 text-sm rounded-full bg-charcoal-900 text-white flex items-center gap-2"
+                    className="px-4 py-2 text-sm rounded-full bg-gold-500 text-charcoal-900 flex items-center gap-2 hover:bg-gold-400 transition-colors"
                   >
                     Quick book popular massage
                   </button>
@@ -176,7 +177,7 @@ export default function Booking() {
                       setSelectedService("Couples Package");
                       setFormStep(2);
                     }}
-                    className="px-4 py-2 text-sm rounded-full bg-cream-200 text-charcoal-900 flex items-center gap-2"
+                    className="px-4 py-2 text-sm rounded-full bg-charcoal-700 text-white flex items-center gap-2 hover:bg-charcoal-600 transition-colors"
                   >
                     Couples package
                   </button>
@@ -191,7 +192,7 @@ export default function Booking() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
               >
-                <h3 className="font-serif text-2xl text-charcoal-900 mb-6">
+                  <h3 className="font-serif text-2xl text-white mb-6">
                   Pick Your Time
                 </h3>
                 <div className="grid grid-cols-3 md:grid-cols-5 gap-3 mb-6">
@@ -203,22 +204,22 @@ export default function Booking() {
                       onClick={() => setSelectedTime(time)}
                       className={`p-3 rounded-xl border-2 transition-all duration-300 ${
                         selectedTime === time
-                          ? "border-gold-500 bg-gold-50 shadow-md"
-                          : "border-cream-200 hover:border-gold-300"
+                          ? "border-gold-500 bg-gold-900/20 shadow-md"
+                          : "border-charcoal-700 hover:border-gold-700 bg-charcoal-800"
                       }`}
                     >
-                      <Clock className={`w-4 h-4 mx-auto mb-1 ${selectedTime === time ? "text-gold-600" : "text-charcoal-400"}`} />
-                      <span className={`font-sans text-sm ${selectedTime === time ? "text-gold-700 font-medium" : "text-charcoal-700"}`}>
+                      <Clock className={`w-4 h-4 mx-auto mb-1 ${selectedTime === time ? "text-gold-400" : "text-charcoal-500"}`} />
+                      <span className={`font-sans text-sm ${selectedTime === time ? "text-gold-400 font-medium" : "text-gray-300"}`}>
                         {time}
                       </span>
                     </motion.button>
                   ))}
                 </div>
                 <div className="flex flex-wrap gap-3 text-sm">
-                  <span className="px-3 py-2 rounded-full bg-rose-100 text-rose-600">
+                  <span className="px-3 py-2 rounded-full bg-rose-900/30 text-rose-400">
                     Peak time: 6:00 PM
                   </span>
-                  <span className="px-3 py-2 rounded-full bg-emerald-100 text-emerald-700">
+                  <span className="px-3 py-2 rounded-full bg-emerald-900/30 text-emerald-400">
                     Quieter: 11:00 AM
                   </span>
                 </div>
@@ -232,7 +233,7 @@ export default function Booking() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
               >
-                <h3 className="font-serif text-2xl text-charcoal-900 mb-6">
+                <h3 className="font-serif text-2xl text-white mb-6">
                   Your Details
                 </h3>
                 <div className="grid md:grid-cols-2 gap-6 mb-8">
@@ -241,7 +242,7 @@ export default function Booking() {
                     <input
                       type="text"
                       placeholder="Your Name"
-                      className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-cream-200 focus:border-gold-500 focus:ring-0 font-sans text-charcoal-800 placeholder:text-charcoal-400 transition-colors"
+                      className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-charcoal-700 bg-charcoal-800 focus:border-gold-500 focus:ring-0 font-sans text-white placeholder:text-charcoal-400 transition-colors"
                     />
                   </div>
                   <div className="relative">
@@ -249,7 +250,7 @@ export default function Booking() {
                     <input
                       type="tel"
                       placeholder="Phone Number"
-                      className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-cream-200 focus:border-gold-500 focus:ring-0 font-sans text-charcoal-800 placeholder:text-charcoal-400 transition-colors"
+                      className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-charcoal-700 bg-charcoal-800 focus:border-gold-500 focus:ring-0 font-sans text-white placeholder:text-charcoal-400 transition-colors"
                     />
                   </div>
                 <div className="relative">
@@ -258,8 +259,8 @@ export default function Booking() {
                     type="text"
                     value={therapist}
                     onChange={(e) => setTherapist(e.target.value)}
-                    placeholder="درمانگر دلخواه (اختیاری)"
-                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-cream-200 focus:border-gold-500 focus:ring-0 font-sans text-charcoal-800 placeholder:text-charcoal-400 transition-colors"
+                    placeholder="Preferred Therapist (Optional)"
+                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-charcoal-700 bg-charcoal-800 focus:border-gold-500 focus:ring-0 font-sans text-white placeholder:text-charcoal-400 transition-colors"
                   />
                 </div>
                   <div className="relative md:col-span-2">
@@ -267,35 +268,35 @@ export default function Booking() {
                     <input
                       type="email"
                       placeholder="Email Address"
-                      className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-cream-200 focus:border-gold-500 focus:ring-0 font-sans text-charcoal-800 placeholder:text-charcoal-400 transition-colors"
+                      className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-charcoal-700 bg-charcoal-800 focus:border-gold-500 focus:ring-0 font-sans text-white placeholder:text-charcoal-400 transition-colors"
                     />
                   </div>
                 <div className="md:col-span-2">
                   <textarea
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    placeholder="یادداشت یا حساسیت خاص را بنویسید"
-                    className="w-full rounded-xl border-2 border-cream-200 focus:border-gold-500 focus:ring-0 font-sans text-charcoal-800 placeholder:text-charcoal-400 transition-colors px-4 py-3 min-h-[110px]"
+                    placeholder="Notes or special requests"
+                    className="w-full rounded-xl border-2 border-charcoal-700 bg-charcoal-800 focus:border-gold-500 focus:ring-0 font-sans text-white placeholder:text-charcoal-400 transition-colors px-4 py-3 min-h-[110px]"
                   />
                 </div>
                 </div>
 
                 {/* Summary */}
-                <div className="bg-cream-50 rounded-2xl p-6 mb-8">
-                  <h4 className="font-serif text-lg text-charcoal-900 mb-4">Booking Summary</h4>
+                <div className="bg-charcoal-800 rounded-2xl p-6 mb-8">
+                  <h4 className="font-serif text-lg text-white mb-4">Booking Summary</h4>
                   <div className="space-y-2 text-sm font-sans">
                     <div className="flex justify-between">
-                      <span className="text-charcoal-600">Service</span>
-                      <span className="text-charcoal-900 font-medium">{selectedService}</span>
+                      <span className="text-gray-400">Service</span>
+                      <span className="text-white font-medium">{selectedService}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-charcoal-600">Time</span>
-                      <span className="text-charcoal-900 font-medium">{selectedTime}</span>
+                      <span className="text-gray-400">Time</span>
+                      <span className="text-white font-medium">{selectedTime}</span>
                     </div>
                   {therapist && (
                     <div className="flex justify-between">
-                      <span className="text-charcoal-600">Therapist</span>
-                      <span className="text-charcoal-900 font-medium">{therapist}</span>
+                      <span className="text-gray-400">Therapist</span>
+                      <span className="text-white font-medium">{therapist}</span>
                     </div>
                   )}
                   </div>
@@ -310,7 +311,7 @@ export default function Booking() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setFormStep(formStep - 1)}
-                  className="px-6 py-3 font-sans text-charcoal-600 hover:text-charcoal-900 transition-colors"
+                  className="px-6 py-3 font-sans text-gray-300 hover:text-white transition-colors"
                 >
                   ← Back
                 </motion.button>
@@ -332,7 +333,7 @@ export default function Booking() {
                 }
                 className={`ml-auto flex items-center gap-2 px-8 py-4 rounded-full font-sans font-medium tracking-wide transition-all duration-300 ${
                   ((formStep === 1 && !selectedService) || (formStep === 2 && !selectedTime))
-                    ? "bg-cream-200 text-charcoal-400 cursor-not-allowed"
+                    ? "bg-charcoal-700 text-gray-500 cursor-not-allowed"
                     : "bg-gradient-to-r from-gold-500 to-gold-600 text-white shadow-lg hover:shadow-xl"
                 }`}
               >

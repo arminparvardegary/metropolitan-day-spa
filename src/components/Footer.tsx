@@ -3,6 +3,9 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Instagram, Facebook, Mail, Phone, MapPin, Sparkles, Heart, ArrowUp } from "lucide-react";
+import dynamic from "next/dynamic";
+
+const Diamond3D = dynamic(() => import("./Diamond3D"), { ssr: false });
 
 const quickLinks = [
   { name: "Home", href: "/" },
@@ -27,7 +30,10 @@ export default function Footer() {
   };
 
   return (
-    <footer className="relative bg-charcoal-950 overflow-hidden">
+    <footer className="relative bg-charcoal-950 overflow-hidden pt-20">
+      {/* 3D Diamond */}
+      <Diamond3D />
+
       {/* Background Effects */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gold-500/5 rounded-full blur-[150px]" />

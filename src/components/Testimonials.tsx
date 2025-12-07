@@ -4,6 +4,9 @@ import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { Star, Quote, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+
+const Rings3D = dynamic(() => import("./Rings3D"), { ssr: false });
 
 const testimonials = [
   {
@@ -93,18 +96,23 @@ export default function Testimonials() {
   };
 
   return (
-    <section className="relative py-32 overflow-hidden bg-gradient-to-b from-cream-50 to-white">
+    <section className="relative py-32 overflow-hidden bg-gradient-to-b from-cream-50 to-white dark:from-charcoal-900 dark:to-charcoal-950">
+      {/* 3D Rings Background */}
+      <div className="absolute inset-0 pointer-events-none opacity-40">
+        <Rings3D />
+      </div>
+
       {/* Background Decorations */}
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
           animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
           transition={{ duration: 10, repeat: Infinity }}
-          className="absolute top-0 left-0 w-[600px] h-[600px] bg-gold-300/30 rounded-full blur-[200px]"
+          className="absolute top-0 left-0 w-[600px] h-[600px] bg-gold-300/30 dark:bg-gold-900/20 rounded-full blur-[200px]"
         />
         <motion.div
           animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.2, 0.1] }}
           transition={{ duration: 12, repeat: Infinity }}
-          className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gold-400/20 rounded-full blur-[180px]"
+          className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gold-400/20 dark:bg-gold-800/20 rounded-full blur-[180px]"
         />
       </div>
 
@@ -112,9 +120,9 @@ export default function Testimonials() {
       <motion.div
         initial={{ opacity: 0, scale: 0.5 }}
         animate={isInView ? { opacity: 0.03, scale: 1 } : {}}
-        className="absolute top-20 left-1/2 -translate-x-1/2"
+        className="absolute top-20 left-1/2 -translate-x-1/2 dark:opacity-5"
       >
-        <Quote className="w-96 h-96 text-charcoal-900" />
+        <Quote className="w-96 h-96 text-charcoal-900 dark:text-white" />
       </motion.div>
 
       <div className="container-custom relative z-10" ref={ref}>
@@ -135,14 +143,14 @@ export default function Testimonials() {
             <span className="text-gold-700 font-sans text-sm tracking-wide">Testimonials</span>
           </motion.div>
 
-          <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-charcoal-900 mb-6">
+          <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-charcoal-900 dark:text-white mb-6">
             What Our Guests{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-500 to-gold-700">
               Say
             </span>
           </h2>
 
-          <p className="font-sans text-charcoal-600 text-lg">
+          <p className="font-sans text-charcoal-600 dark:text-gray-300 text-lg">
             Discover why thousands choose us for their wellness journey
           </p>
         </motion.div>
@@ -158,8 +166,8 @@ export default function Testimonials() {
               }}
               className={`px-4 py-2 rounded-full text-sm border transition-colors ${
                 filter === item
-                  ? "bg-charcoal-900 text-white border-charcoal-900"
-                  : "bg-white border-cream-200 text-charcoal-700 hover:border-gold-400"
+                  ? "bg-charcoal-900 text-white border-charcoal-900 dark:bg-gold-500 dark:text-charcoal-900 dark:border-gold-500"
+                  : "bg-white dark:bg-charcoal-800 border-cream-200 dark:border-charcoal-700 text-charcoal-700 dark:text-gray-300 hover:border-gold-400 dark:hover:border-gold-500"
               }`}
             >
               {item}
@@ -204,7 +212,7 @@ export default function Testimonials() {
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 className="relative"
               >
-                <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl shadow-charcoal-200/30 border border-cream-100">
+                <div className="bg-white dark:bg-charcoal-800 rounded-3xl p-8 md:p-12 shadow-xl shadow-charcoal-200/30 dark:shadow-black/50 border border-cream-100 dark:border-charcoal-700">
                   {/* Quote Icon */}
                   <div className="absolute -top-4 left-8 w-12 h-12 bg-gradient-to-br from-gold-400 to-gold-600 rounded-2xl flex items-center justify-center shadow-lg">
                     <Quote className="w-5 h-5 text-white" />
@@ -225,13 +233,13 @@ export default function Testimonials() {
                   </div>
 
                   {/* Testimonial Text */}
-                  <p className="font-serif text-xl md:text-2xl text-charcoal-800 text-center leading-relaxed mb-8 italic">
+                  <p className="font-serif text-xl md:text-2xl text-charcoal-800 dark:text-gray-200 text-center leading-relaxed mb-8 italic">
                   &ldquo;{safeTestimonials[currentIndex].text}&rdquo;
                   </p>
 
                   {/* Author */}
                   <div className="flex flex-col items-center">
-                    <div className="relative w-16 h-16 rounded-full overflow-hidden mb-3 ring-4 ring-gold-100">
+                    <div className="relative w-16 h-16 rounded-full overflow-hidden mb-3 ring-4 ring-gold-100 dark:ring-gold-900/30">
                       <Image
                       src={safeTestimonials[currentIndex].avatar}
                       alt={safeTestimonials[currentIndex].name}
@@ -239,10 +247,10 @@ export default function Testimonials() {
                         className="object-cover"
                       />
                     </div>
-                    <h4 className="font-serif text-lg text-charcoal-900 font-medium">
+                    <h4 className="font-serif text-lg text-charcoal-900 dark:text-white font-medium">
                     {safeTestimonials[currentIndex].name}
                     </h4>
-                    <span className="font-sans text-sm text-gold-600">
+                    <span className="font-sans text-sm text-gold-600 dark:text-gold-400">
                     {safeTestimonials[currentIndex].role} • {safeTestimonials[currentIndex].service}
                     </span>
                   </div>
@@ -263,7 +271,7 @@ export default function Testimonials() {
                 className={`h-2 rounded-full transition-all duration-300 ${
                   index === currentIndex
                     ? "w-8 bg-gradient-to-r from-gold-500 to-gold-600"
-                    : "w-2 bg-cream-300 hover:bg-gold-300"
+                    : "w-2 bg-cream-300 dark:bg-charcoal-700 hover:bg-gold-300 dark:hover:bg-gold-800"
                 }`}
                 whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.9 }}
@@ -277,7 +285,7 @@ export default function Testimonials() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="flex flex-wrap justify-center gap-8 md:gap-16 mt-20 pt-10 border-t border-cream-200"
+          className="flex flex-wrap justify-center gap-8 md:gap-16 mt-20 pt-10 border-t border-cream-200 dark:border-charcoal-800"
         >
           {[
             { value: "4.9", label: "Average Rating" },
@@ -288,7 +296,7 @@ export default function Testimonials() {
               <div className="font-serif text-4xl md:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-gold-500 to-gold-700 font-medium mb-1">
                 {stat.value}
               </div>
-              <div className="font-sans text-sm text-charcoal-600">{stat.label}</div>
+              <div className="font-sans text-sm text-charcoal-600 dark:text-gray-400">{stat.label}</div>
             </div>
           ))}
         </motion.div>

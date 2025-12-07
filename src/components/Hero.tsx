@@ -5,6 +5,10 @@ import Image from "next/image";
 import { ChevronDown, Sparkles, Star, Play, ArrowRight, Diamond } from "lucide-react";
 import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+
+// Dynamically import Scene3D to avoid SSR issues with Three.js
+const Scene3D = dynamic(() => import("./Scene3D"), { ssr: false });
 
 const floatingImages = [
   { src: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=400", delay: 0 },
@@ -41,8 +45,11 @@ export default function Hero() {
       ref={ref}
       className="relative min-h-screen flex items-center overflow-hidden bg-charcoal-950"
     >
+      {/* 3D Scene Background */}
+      <Scene3D />
+
       {/* Animated Background Grid */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(212,175,55,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(212,175,55,0.03)_1px,transparent_1px)] bg-[size:100px_100px]" />
       </div>
 
@@ -53,7 +60,7 @@ export default function Hero() {
           rotate: [0, 180, 360]
         }}
         transition={{ duration: 20, repeat: Infinity }}
-        className="absolute top-1/4 -left-40 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-gold-500/20 to-transparent blur-[120px]"
+        className="absolute top-1/4 -left-40 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-gold-500/20 to-transparent blur-[120px] pointer-events-none"
       />
       <motion.div
         animate={{ 
@@ -61,14 +68,14 @@ export default function Hero() {
           rotate: [360, 180, 0]
         }}
         transition={{ duration: 25, repeat: Infinity }}
-        className="absolute bottom-0 right-0 w-[800px] h-[800px] rounded-full bg-gradient-to-tl from-gold-600/15 to-transparent blur-[150px]"
+        className="absolute bottom-0 right-0 w-[800px] h-[800px] rounded-full bg-gradient-to-tl from-gold-600/15 to-transparent blur-[150px] pointer-events-none"
       />
 
       {/* Floating Sparkles */}
       {[...Array(30)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-1 h-1 bg-gold-400 rounded-full"
+          className="absolute w-1 h-1 bg-gold-400 rounded-full pointer-events-none"
           initial={{
             x: Math.random() * 100 + "%",
             y: Math.random() * 100 + "%",

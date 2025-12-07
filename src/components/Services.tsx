@@ -82,11 +82,11 @@ export default function Services() {
   }, [search, filter]);
 
   return (
-    <section id="services" className="relative py-32 bg-cream-50 overflow-hidden">
+    <section id="services" className="relative py-32 bg-charcoal-950 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/3 w-[600px] h-[600px] bg-gold-200/40 rounded-full blur-[150px]" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gold-300/30 rounded-full blur-[120px]" />
+        <div className="absolute top-0 left-1/3 w-[600px] h-[600px] bg-gold-400/10 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gold-500/10 rounded-full blur-[120px]" />
       </div>
 
       <div className="container-custom relative z-10" ref={ref}>
@@ -101,15 +101,15 @@ export default function Services() {
             initial={{ scale: 0 }}
             animate={isInView ? { scale: 1 } : {}}
             transition={{ type: "spring", delay: 0.2 }}
-            className="inline-flex items-center gap-3 px-5 py-2.5 bg-charcoal-900 rounded-full mb-8"
+            className="inline-flex items-center gap-3 px-5 py-2.5 bg-gold-900/30 rounded-full mb-8"
           >
             <Zap className="w-4 h-4 text-gold-400" />
-            <span className="text-gold-400 font-sans text-sm tracking-widest uppercase">
+            <span className="text-gold-300 font-sans text-sm tracking-widest uppercase">
               Our Treatments
             </span>
           </motion.div>
 
-          <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl text-charcoal-900 mb-6">
+          <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl text-white mb-6">
             Curated{" "}
             <span className="relative">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-500 to-gold-700">
@@ -124,7 +124,7 @@ export default function Services() {
             </span>
           </h2>
 
-          <p className="font-sans text-xl text-charcoal-600">
+          <p className="font-sans text-xl text-gray-300">
             Each service is a journey, meticulously designed for your transformation
           </p>
         </motion.div>
@@ -137,7 +137,7 @@ export default function Services() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Quick search services or category (e.g. Massage, Facial)"
-              className="w-full rounded-2xl border border-cream-200 bg-white px-4 py-3 pl-11 font-sans text-sm focus:border-gold-500 focus:outline-none shadow-sm"
+              className="w-full rounded-2xl border border-charcoal-700 bg-charcoal-800 px-4 py-3 pl-11 font-sans text-sm text-white placeholder:text-charcoal-400 focus:border-gold-500 focus:outline-none shadow-sm"
             />
             <Filter className="w-4 h-4 text-charcoal-400 absolute left-3 top-1/2 -translate-y-1/2" />
           </div>
@@ -153,8 +153,8 @@ export default function Services() {
                 onClick={() => setFilter(btn.key as any)}
                 className={`px-4 py-2 rounded-full text-sm font-sans border transition-all ${
                   filter === btn.key
-                    ? "bg-charcoal-900 text-white border-charcoal-900"
-                    : "bg-white border-cream-200 text-charcoal-700 hover:border-gold-400"
+                    ? "bg-gold-500 text-charcoal-900 border-gold-500 font-medium"
+                    : "bg-charcoal-800 border-charcoal-700 text-gray-300 hover:border-gold-500/50"
                 }`}
               >
                 {btn.label}
@@ -173,9 +173,18 @@ export default function Services() {
               transition={{ duration: 0.6, delay: index * 0.15 }}
               onMouseEnter={() => setActiveCard(service.id)}
               onMouseLeave={() => setActiveCard(null)}
-              className="group relative"
+              className="group relative perspective-1000"
             >
-              <div className={`relative h-[500px] rounded-[2rem] overflow-hidden cursor-pointer transition-all duration-700 ${activeCard === service.id ? 'shadow-2xl shadow-charcoal-400/20' : 'shadow-xl'}`}>
+              <motion.div 
+                className={`relative h-[500px] rounded-[2rem] overflow-hidden cursor-pointer transition-all duration-700 preserve-3d ${activeCard === service.id ? 'shadow-2xl shadow-black/50' : 'shadow-xl'}`}
+                whileHover={{ 
+                  rotateX: 5, 
+                  rotateY: 5, 
+                  scale: 1.02,
+                  transition: { duration: 0.4, ease: "easeOut" } 
+                }}
+                style={{ transformStyle: "preserve-3d" }}
+              >
                 {/* Background Image */}
                 <motion.div
                   animate={activeCard === service.id ? { scale: 1.1 } : { scale: 1 }}
@@ -192,7 +201,7 @@ export default function Services() {
                 </motion.div>
 
                 {/* Gradient Overlay */}
-                <div className={`absolute inset-0 bg-gradient-to-t from-charcoal-950 via-charcoal-950/70 to-transparent opacity-80 group-hover:opacity-90 transition-opacity`} />
+                <div className={`absolute inset-0 bg-gradient-to-t from-charcoal-950 via-charcoal-950/80 to-transparent opacity-90 group-hover:opacity-95 transition-opacity`} />
 
                 {/* Content */}
                 <div className="absolute inset-0 p-8 flex flex-col justify-end">
@@ -210,7 +219,7 @@ export default function Services() {
                         </span>
                       </motion.div>
                     )}
-                    <div className="flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full ml-auto">
+                    <div className="flex items-center gap-2 px-4 py-2 bg-charcoal-900/50 backdrop-blur-md rounded-full ml-auto border border-white/10">
                       <Star className="w-4 h-4 text-gold-400 fill-gold-400" />
                       <span className="text-white font-sans text-sm font-medium">
                         {service.rating}
@@ -231,7 +240,7 @@ export default function Services() {
                       <h3 className="font-serif text-4xl text-white mb-3">
                         {service.title}
                       </h3>
-                      <p className="font-sans text-white/70 leading-relaxed max-w-sm">
+                      <p className="font-sans text-gray-300 leading-relaxed max-w-sm">
                         {service.description}
                       </p>
                     </motion.div>
@@ -239,7 +248,7 @@ export default function Services() {
                     {/* Info Row */}
                     <div className="flex items-center justify-between pt-6 border-t border-white/10">
                       <div className="flex items-center gap-6">
-                        <div className="flex items-center gap-2 text-white/60">
+                        <div className="flex items-center gap-2 text-gray-400">
                           <Clock className="w-4 h-4" />
                           <span className="font-sans text-sm">{service.duration}</span>
                         </div>
@@ -265,7 +274,7 @@ export default function Services() {
                 >
                   {String(index + 1).padStart(2, '0')}
                 </motion.div>
-              </div>
+                </motion.div>
             </motion.div>
           ))}
         </div>

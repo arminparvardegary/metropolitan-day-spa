@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Phone, Sparkles, Diamond, Sun, Moon } from "lucide-react";
+import { Menu, X, Phone, Sparkles, Diamond } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -17,7 +18,8 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,24 +29,19 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    const stored = localStorage.getItem("spa-theme");
-    if (stored === "dark") {
-      setTheme("dark");
-      document.documentElement.classList.add("theme-dark");
-    }
-  }, []);
+  // Always light text on dark/transparent backgrounds for Home/Scrolled
+  // Dark text on light backgrounds for inner pages (unscrolled)
+  const textColorClass = isScrolled || isHome 
+    ? "text-white/70 group-hover:text-white" 
+    : "text-charcoal-600 group-hover:text-charcoal-900";
+    
+  const logoTextColorClass = isScrolled || isHome 
+    ? "text-white" 
+    : "text-charcoal-900";
 
-  const toggleTheme = () => {
-    const next = theme === "light" ? "dark" : "light";
-    setTheme(next);
-    if (next === "dark") {
-      document.documentElement.classList.add("theme-dark");
-    } else {
-      document.documentElement.classList.remove("theme-dark");
-    }
-    localStorage.setItem("spa-theme", next);
-  };
+  const phoneTextColorClass = isScrolled || isHome 
+    ? "text-white/60 hover:text-gold-400" 
+    : "text-charcoal-600 hover:text-gold-600";
 
   return (
     <>
@@ -52,10 +49,10 @@ export default function Navbar() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
+        className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-700 ${
           isScrolled
-            ? "bg-charcoal-950/95 backdrop-blur-xl border-b border-white/10 py-3"
-            : "bg-transparent py-5"
+            ? "bg-charcoal-950/95 backdrop-blur-xl border-b border-white/10 py-4"
+            : "bg-transparent py-8"
         }`}
       >
         <div className="container-custom">
@@ -74,7 +71,7 @@ export default function Navbar() {
                   <Diamond className="w-5 h-5 text-charcoal-950" />
                 </motion.div>
                 <div className="flex flex-col">
-                  <span className="font-serif text-xl text-white font-medium tracking-wide">
+                  <span className={`font-serif text-xl font-medium tracking-wide ${logoTextColorClass}`}>
                     Metropolitan
                   </span>
                   <span className="font-sans text-[10px] tracking-[0.4em] uppercase text-gold-400">
@@ -94,7 +91,7 @@ export default function Navbar() {
                   onMouseLeave={() => setHoveredLink(null)}
                   className="relative px-5 py-3 group"
                 >
-                  <span className="relative z-10 font-sans text-sm tracking-wide text-white/70 group-hover:text-white transition-colors">
+                  <span className={`relative z-10 font-sans text-sm tracking-wide transition-colors ${textColorClass}`}>
                     {link.name}
                   </span>
                   
@@ -106,7 +103,11 @@ export default function Navbar() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="absolute inset-0 bg-white/10 rounded-full"
+                        className={`absolute inset-0 rounded-full transition-colors ${
+                          isScrolled || isHome 
+                            ? "bg-white/10" 
+                            : "bg-charcoal-900/5"
+                        }`}
                         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                       />
                     )}
@@ -117,21 +118,11 @@ export default function Navbar() {
 
             {/* Right Side */}
             <div className="hidden lg:flex items-center gap-5">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={toggleTheme}
-                className="w-11 h-11 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center"
-                aria-label="Toggle theme"
-              >
-                {theme === "light" ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
-              </motion.button>
-
               {/* Phone */}
               <motion.a
                 href="tel:9733103720"
                 whileHover={{ scale: 1.05 }}
-                className="flex items-center gap-2 text-white/60 hover:text-gold-400 transition-colors font-sans text-sm"
+                className={`flex items-center gap-2 transition-colors font-sans text-sm ${phoneTextColorClass}`}
               >
                 <Phone className="w-4 h-4" />
                 <span>973.310.3720</span>
@@ -160,7 +151,11 @@ export default function Navbar() {
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden relative z-50 w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white border border-white/20"
+              className={`lg:hidden relative z-50 w-12 h-12 backdrop-blur-sm rounded-full flex items-center justify-center border transition-colors ${
+                isScrolled || isHome
+                  ? "bg-white/10 border-white/20 text-white"
+                  : "bg-charcoal-900/5 border-charcoal-900/10 text-charcoal-900"
+              }`}
               aria-label="Toggle menu"
             >
               <AnimatePresence mode="wait">
