@@ -2,24 +2,24 @@
 
 import { motion, useInView } from "framer-motion";
 import Image from "next/image";
-import { useRef, useState } from "react";
-import { ArrowLeftRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowLeftRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 const treatments = [
   {
     title: "Rejuvenating Facial",
-    before: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?q=80&w=400&auto=format&fit=crop",
-    after: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=400&auto=format&fit=crop",
+    before: "https://images.unsplash.com/photo-1526948128573-703ee1aeb6fa?w=1400&auto=format&fit=crop&q=90",
+    after: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1400&auto=format&fit=crop&q=90",
   },
   {
     title: "Deep Tissue Massage",
-    before: "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?q=80&w=400&auto=format&fit=crop",
-    after: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=400&auto=format&fit=crop",
+    before: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1400&auto=format&fit=crop&q=90",
+    after: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=1400&auto=format&fit=crop&q=90",
   },
   {
-    title: "Luxury Manicure",
-    before: "https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=400&auto=format&fit=crop",
-    after: "https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=400&auto=format&fit=crop",
+    title: "Luxury Glow Body",
+    before: "https://images.unsplash.com/photo-1506617420156-8e4536971650?w=1400&auto=format&fit=crop&q=90",
+    after: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1400&auto=format&fit=crop&q=90",
   },
 ];
 
@@ -105,6 +105,14 @@ function BeforeAfterSlider({ title, before, after }: { title: string; before: st
 export default function BeforeAfter() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActive((prev) => (prev + 1) % treatments.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <section className="section-padding bg-white" ref={ref}>
@@ -128,6 +136,34 @@ export default function BeforeAfter() {
             Drag the slider to reveal the transformation
           </p>
         </motion.div>
+
+        {/* Hero Slider */}
+        <div className="relative mb-12">
+          <BeforeAfterSlider {...treatments[active]} />
+          <div className="absolute inset-0 flex items-center justify-between px-2 pointer-events-none">
+            <button
+              onClick={() => setActive((prev) => (prev - 1 + treatments.length) % treatments.length)}
+              className="pointer-events-auto w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-charcoal-800 hover:text-gold-600"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => setActive((prev) => (prev + 1) % treatments.length)}
+              className="pointer-events-auto w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-charcoal-800 hover:text-gold-600"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+          <div className="flex justify-center gap-2 mt-4">
+            {treatments.map((item, idx) => (
+              <button
+                key={item.title}
+                onClick={() => setActive(idx)}
+                className={`w-2.5 h-2.5 rounded-full transition-colors ${idx === active ? "bg-gold-500" : "bg-cream-300"}`}
+              />
+            ))}
+          </div>
+        </div>
 
         {/* Before/After Grid */}
         <div className="grid md:grid-cols-3 gap-8">

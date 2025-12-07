@@ -150,7 +150,7 @@ export default function SpecialOffer() {
 
               {/* CTA */}
               <a
-                href="#booking"
+                href="/booking"
                 onClick={closeOffer}
                 className="inline-block w-full py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-white font-sans font-semibold rounded-sm hover:from-gold-600 hover:to-gold-700 transition-all"
               >

@@ -9,17 +9,17 @@ export default function PageLoader() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Simulate loading progress
+    // Faster loading - simulate progress
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          setTimeout(() => setIsLoading(false), 500);
+          setTimeout(() => setIsLoading(false), 200);
           return 100;
         }
-        return prev + Math.random() * 30;
+        return prev + 35;
       });
-    }, 200);
+    }, 100);
 
     return () => clearInterval(interval);
   }, []);

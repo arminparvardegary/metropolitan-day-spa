@@ -16,6 +16,23 @@
     overflow-x: hidden;
   }
 
+  .theme-dark body {
+    background: #0b0b0f;
+    color: #f6f6f6;
+  }
+
+  .theme-dark .bg-white {
+    background-color: #0f1015 !important;
+  }
+
+  .theme-dark .text-charcoal-900 {
+    color: #f6f6f6 !important;
+  }
+
+  .theme-dark .bg-cream-50 {
+    background-color: #0f1015 !important;
+  }
+
   ::selection {
     @apply bg-gold-400/30 text-charcoal-900;
   }
@@ -127,6 +144,15 @@ img {
 /* Text Shadow */
 .text-shadow-lg {
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Skeleton */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.15), rgba(255,255,255,0.06));
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
 }
 
 /* Gradient Border */

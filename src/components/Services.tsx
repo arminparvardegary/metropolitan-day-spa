@@ -2,8 +2,8 @@
 
 import { motion, useInView } from "framer-motion";
 import Image from "next/image";
-import { useRef, useState } from "react";
-import { ArrowUpRight, Star, Clock, Sparkles, Crown, Zap } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { ArrowUpRight, Star, Clock, Sparkles, Crown, Zap, Filter } from "lucide-react";
 
 const services = [
   {
@@ -12,12 +12,13 @@ const services = [
     subtitle: "Deep Tissue & Relaxation",
     description: "Experience our renowned massage therapy combining ancient techniques with modern wellness",
     duration: "60-90 min",
-    price: "$120",
+    price: 120,
     rating: 4.9,
     reviews: 324,
     popular: true,
     image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1000",
     gradient: "from-amber-500 to-orange-600",
+    category: "Massage",
   },
   {
     id: 2,
@@ -25,12 +26,13 @@ const services = [
     subtitle: "Anti-Aging & Glow",
     description: "Premium facial treatment using diamond-infused serums for ultimate radiance",
     duration: "75 min",
-    price: "$180",
+    price: 180,
     rating: 5.0,
     reviews: 256,
     popular: true,
     image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=1000",
     gradient: "from-rose-500 to-pink-600",
+    category: "Facial",
   },
   {
     id: 3,
@@ -38,12 +40,13 @@ const services = [
     subtitle: "Detox & Rejuvenate",
     description: "Full body wrap and sculpting treatment for complete renewal and detoxification",
     duration: "90 min",
-    price: "$200",
+    price: 200,
     rating: 4.8,
     reviews: 198,
     popular: false,
     image: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=1000",
     gradient: "from-emerald-500 to-teal-600",
+    category: "Body",
   },
   {
     id: 4,
@@ -51,12 +54,13 @@ const services = [
     subtitle: "Nail Art & Care",
     description: "Indulgent hand treatment with premium polish and expert nail artistry",
     duration: "60 min",
-    price: "$85",
+    price: 85,
     rating: 4.9,
     reviews: 412,
     popular: false,
     image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=1000",
     gradient: "from-violet-500 to-purple-600",
+    category: "Nails",
   },
 ];
 
@@ -64,6 +68,18 @@ export default function Services() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [activeCard, setActiveCard] = useState<number | null>(null);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState<"all" | "popular" | "rating" | "price">("all");
+
+  const filtered = useMemo(() => {
+    let list = services.filter((s) =>
+      `${s.title} ${s.subtitle} ${s.category}`.toLowerCase().includes(search.toLowerCase())
+    );
+    if (filter === "popular") list = list.filter((s) => s.popular);
+    if (filter === "rating") list = [...list].sort((a, b) => b.rating - a.rating);
+    if (filter === "price") list = [...list].sort((a, b) => a.price - b.price);
+    return list;
+  }, [search, filter]);
 
   return (
     <section id="services" className="relative py-32 bg-cream-50 overflow-hidden">
@@ -113,9 +129,43 @@ export default function Services() {
           </p>
         </motion.div>
 
+        {/* Search & Filters */}
+        <div className="flex flex-col md:flex-row md:items-center gap-4 justify-between mb-10">
+          <div className="relative w-full md:w-1/2">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Quick search services or category (e.g. Massage, Facial)"
+              className="w-full rounded-2xl border border-cream-200 bg-white px-4 py-3 pl-11 font-sans text-sm focus:border-gold-500 focus:outline-none shadow-sm"
+            />
+            <Filter className="w-4 h-4 text-charcoal-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { key: "all", label: "All" },
+              { key: "popular", label: "Most Popular" },
+              { key: "rating", label: "Top Rated" },
+              { key: "price", label: "Lower Price" },
+            ].map((btn) => (
+              <button
+                key={btn.key}
+                onClick={() => setFilter(btn.key as any)}
+                className={`px-4 py-2 rounded-full text-sm font-sans border transition-all ${
+                  filter === btn.key
+                    ? "bg-charcoal-900 text-white border-charcoal-900"
+                    : "bg-white border-cream-200 text-charcoal-700 hover:border-gold-400"
+                }`}
+              >
+                {btn.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Services Grid */}
         <div className="grid md:grid-cols-2 gap-8">
-          {services.map((service, index) => (
+          {filtered.map((service, index) => (
             <motion.div
               key={service.id}
               initial={{ opacity: 0, y: 50 }}
@@ -137,6 +187,7 @@ export default function Services() {
                     alt={service.title}
                     fill
                     className="object-cover"
+                    loading="lazy"
                   />
                 </motion.div>
 
@@ -192,13 +243,11 @@ export default function Services() {
                           <Clock className="w-4 h-4" />
                           <span className="font-sans text-sm">{service.duration}</span>
                         </div>
-                        <div className="font-serif text-2xl text-gold-400">
-                          {service.price}
-                        </div>
+                      <div className="font-serif text-2xl text-gold-400">${service.price}</div>
                       </div>
 
                       <motion.a
-                        href="#booking"
+                        href="/booking"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         className="w-14 h-14 bg-white rounded-full flex items-center justify-center group/btn"
@@ -229,7 +278,7 @@ export default function Services() {
           className="text-center mt-16"
         >
           <a
-            href="#booking"
+            href="/booking"
             className="group inline-flex items-center gap-4 px-10 py-5 bg-charcoal-900 text-white rounded-full font-sans font-bold tracking-wide hover:bg-charcoal-800 transition-colors shadow-xl hover:shadow-2xl"
           >
             <span>Explore All Treatments</span>

@@ -1,8 +1,9 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
-import { Calendar, Clock, User, Phone, Mail, Sparkles, CheckCircle, ChevronRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Calendar, Clock, User, Phone, Mail, Sparkles, CheckCircle, ChevronRight, UserCheck } from "lucide-react";
+import { useToast } from "./ToastProvider";
 
 const services = [
   "Signature Massage",
@@ -24,6 +25,20 @@ export default function Booking() {
   const [selectedService, setSelectedService] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [formStep, setFormStep] = useState(1);
+  const [therapist, setTherapist] = useState("");
+  const [notes, setNotes] = useState("");
+  const { showToast } = useToast();
+
+  useEffect(() => {
+    const listener = (e: Event) => {
+      const detail = (e as CustomEvent<{ service?: string; time?: string }>).detail || {};
+      if (detail.service) setSelectedService(detail.service);
+      if (detail.time) setSelectedTime(detail.time);
+      setFormStep(2);
+    };
+    window.addEventListener("quick-book", listener as EventListener);
+    return () => window.removeEventListener("quick-book", listener as EventListener);
+  }, []);
 
   return (
     <section id="booking" className="relative py-32 overflow-hidden bg-gradient-to-b from-white to-cream-50">
@@ -126,7 +141,7 @@ export default function Booking() {
                 <h3 className="font-serif text-2xl text-charcoal-900 mb-6">
                   Choose Your Treatment
                 </h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
                   {services.map((service) => (
                     <motion.button
                       key={service}
@@ -146,6 +161,26 @@ export default function Booking() {
                     </motion.button>
                   ))}
                 </div>
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    onClick={() => {
+                      setSelectedService("Signature Massage");
+                      setFormStep(2);
+                    }}
+                    className="px-4 py-2 text-sm rounded-full bg-charcoal-900 text-white flex items-center gap-2"
+                  >
+                    Quick book popular massage
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSelectedService("Couples Package");
+                      setFormStep(2);
+                    }}
+                    className="px-4 py-2 text-sm rounded-full bg-cream-200 text-charcoal-900 flex items-center gap-2"
+                  >
+                    Couples package
+                  </button>
+                </div>
               </motion.div>
             )}
 
@@ -159,7 +194,7 @@ export default function Booking() {
                 <h3 className="font-serif text-2xl text-charcoal-900 mb-6">
                   Pick Your Time
                 </h3>
-                <div className="grid grid-cols-3 md:grid-cols-5 gap-3 mb-8">
+                <div className="grid grid-cols-3 md:grid-cols-5 gap-3 mb-6">
                   {timeSlots.map((time) => (
                     <motion.button
                       key={time}
@@ -178,6 +213,14 @@ export default function Booking() {
                       </span>
                     </motion.button>
                   ))}
+                </div>
+                <div className="flex flex-wrap gap-3 text-sm">
+                  <span className="px-3 py-2 rounded-full bg-rose-100 text-rose-600">
+                    Peak time: 6:00 PM
+                  </span>
+                  <span className="px-3 py-2 rounded-full bg-emerald-100 text-emerald-700">
+                    Quieter: 11:00 AM
+                  </span>
                 </div>
               </motion.div>
             )}
@@ -209,6 +252,16 @@ export default function Booking() {
                       className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-cream-200 focus:border-gold-500 focus:ring-0 font-sans text-charcoal-800 placeholder:text-charcoal-400 transition-colors"
                     />
                   </div>
+                <div className="relative">
+                  <UserCheck className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal-400" />
+                  <input
+                    type="text"
+                    value={therapist}
+                    onChange={(e) => setTherapist(e.target.value)}
+                    placeholder="درمانگر دلخواه (اختیاری)"
+                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-cream-200 focus:border-gold-500 focus:ring-0 font-sans text-charcoal-800 placeholder:text-charcoal-400 transition-colors"
+                  />
+                </div>
                   <div className="relative md:col-span-2">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal-400" />
                     <input
@@ -217,6 +270,14 @@ export default function Booking() {
                       className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-cream-200 focus:border-gold-500 focus:ring-0 font-sans text-charcoal-800 placeholder:text-charcoal-400 transition-colors"
                     />
                   </div>
+                <div className="md:col-span-2">
+                  <textarea
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    placeholder="یادداشت یا حساسیت خاص را بنویسید"
+                    className="w-full rounded-xl border-2 border-cream-200 focus:border-gold-500 focus:ring-0 font-sans text-charcoal-800 placeholder:text-charcoal-400 transition-colors px-4 py-3 min-h-[110px]"
+                  />
+                </div>
                 </div>
 
                 {/* Summary */}
@@ -231,6 +292,12 @@ export default function Booking() {
                       <span className="text-charcoal-600">Time</span>
                       <span className="text-charcoal-900 font-medium">{selectedTime}</span>
                     </div>
+                  {therapist && (
+                    <div className="flex justify-between">
+                      <span className="text-charcoal-600">Therapist</span>
+                      <span className="text-charcoal-900 font-medium">{therapist}</span>
+                    </div>
+                  )}
                   </div>
                 </div>
               </motion.div>
@@ -252,7 +319,13 @@ export default function Booking() {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => formStep < 3 ? setFormStep(formStep + 1) : null}
+                onClick={() => {
+                  if (formStep < 3) {
+                    setFormStep(formStep + 1);
+                  } else {
+                    showToast("Booking request submitted. We will contact you shortly.", "success");
+                  }
+                }}
                 disabled={
                   (formStep === 1 && !selectedService) ||
                   (formStep === 2 && !selectedTime)

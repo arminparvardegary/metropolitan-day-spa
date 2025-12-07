@@ -216,7 +216,7 @@ export default function About() {
 
               {/* CTA */}
               <motion.a
-                href="#contact"
+                href="/contact"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="inline-flex items-center gap-3 px-8 py-4 bg-charcoal-900 text-white rounded-full font-sans font-medium tracking-wide hover:bg-charcoal-800 transition-all duration-300 shadow-lg hover:shadow-xl"

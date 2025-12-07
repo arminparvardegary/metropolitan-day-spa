@@ -5,11 +5,11 @@ import Link from "next/link";
 import { Instagram, Facebook, Mail, Phone, MapPin, Sparkles, Heart, ArrowUp } from "lucide-react";
 
 const quickLinks = [
-  { name: "Home", href: "#home" },
-  { name: "Services", href: "#services" },
-  { name: "About", href: "#about" },
-  { name: "Gallery", href: "#gallery" },
-  { name: "Contact", href: "#contact" },
+  { name: "Home", href: "/" },
+  { name: "Services", href: "/services" },
+  { name: "About", href: "/about" },
+  { name: "Gallery", href: "/gallery" },
+  { name: "Contact", href: "/contact" },
 ];
 
 const services = [
@@ -42,7 +42,7 @@ export default function Footer() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand Column */}
           <div className="lg:col-span-1">
-            <Link href="#home" className="inline-block mb-6">
+            <Link href="/" className="inline-block mb-6">
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 className="flex items-center gap-2"
@@ -103,7 +103,7 @@ export default function Footer() {
               {services.map((service) => (
                 <li key={service}>
                   <Link
-                    href="#services"
+                    href="/services"
                     className="font-sans text-white/60 hover:text-gold-400 transition-colors inline-flex items-center gap-2 group"
                   >
                     <span className="w-0 h-px bg-gold-500 group-hover:w-4 transition-all duration-300" />
@@ -124,7 +124,7 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-gold-500 mt-1 flex-shrink-0" />
                 <span className="font-sans text-white/60">
-                  550 Kinderkamack Rd<br />Oradell, NJ 07649
+                  1122 Goffle Road<br />Hawthorne, NJ 07506
                 </span>
               </li>
               <li>
@@ -134,9 +134,9 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="mailto:info@metrodayspa.com" className="flex items-center gap-3 font-sans text-white/60 hover:text-gold-400 transition-colors">
+                <a href="mailto:support@metrodayspa.com" className="flex items-center gap-3 font-sans text-white/60 hover:text-gold-400 transition-colors">
                   <Mail className="w-5 h-5 text-gold-500 flex-shrink-0" />
-                  info@metrodayspa.com
+                  support@metrodayspa.com
                 </a>
               </li>
             </ul>

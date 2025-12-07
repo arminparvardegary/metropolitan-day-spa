@@ -2,21 +2,22 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Phone, Sparkles, Diamond } from "lucide-react";
+import { Menu, X, Phone, Sparkles, Diamond, Sun, Moon } from "lucide-react";
 import Link from "next/link";
 
 const navLinks = [
-  { name: "Home", href: "#home" },
-  { name: "Services", href: "#services" },
-  { name: "About", href: "#about" },
-  { name: "Gallery", href: "#gallery" },
-  { name: "Contact", href: "#contact" },
+  { name: "Home", href: "/" },
+  { name: "Services", href: "/services" },
+  { name: "About", href: "/about" },
+  { name: "Gallery", href: "/gallery" },
+  { name: "Contact", href: "/contact" },
 ];
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,6 +26,25 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("spa-theme");
+    if (stored === "dark") {
+      setTheme("dark");
+      document.documentElement.classList.add("theme-dark");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const next = theme === "light" ? "dark" : "light";
+    setTheme(next);
+    if (next === "dark") {
+      document.documentElement.classList.add("theme-dark");
+    } else {
+      document.documentElement.classList.remove("theme-dark");
+    }
+    localStorage.setItem("spa-theme", next);
+  };
 
   return (
     <>
@@ -35,13 +55,13 @@ export default function Navbar() {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
           isScrolled
             ? "bg-charcoal-950/95 backdrop-blur-xl border-b border-white/10 py-3"
-            : "bg-transparent py-6"
+            : "bg-transparent py-5"
         }`}
       >
         <div className="container-custom">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link href="#home" className="relative z-10 group">
+            <Link href="/" className="relative z-10 group">
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 className="flex items-center gap-3"
@@ -97,6 +117,16 @@ export default function Navbar() {
 
             {/* Right Side */}
             <div className="hidden lg:flex items-center gap-5">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={toggleTheme}
+                className="w-11 h-11 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center"
+                aria-label="Toggle theme"
+              >
+                {theme === "light" ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+              </motion.button>
+
               {/* Phone */}
               <motion.a
                 href="tel:9733103720"
@@ -110,7 +140,7 @@ export default function Navbar() {
               {/* CTA Button */}
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Link
-                  href="#booking"
+                  href="/booking"
                   className="group relative inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-r from-gold-500 to-gold-600 text-charcoal-950 font-sans font-bold text-sm rounded-full overflow-hidden shadow-lg shadow-gold-500/25"
                 >
                   <span className="relative z-10">Book Now</span>
@@ -220,7 +250,7 @@ export default function Navbar() {
                   <span className="font-sans">973.310.3720</span>
                 </a>
                 <Link
-                  href="#booking"
+                  href="/booking"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-charcoal-950 font-sans font-bold rounded-full"
                 >

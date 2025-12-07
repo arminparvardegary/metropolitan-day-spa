@@ -87,23 +87,13 @@ export default function Hero() {
       ))}
 
       {/* Content Container */}
-      <motion.div style={{ opacity }} className="relative z-20 container-custom py-32">
+      <div className="relative z-20 container-custom py-32">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left Content */}
           <div>
             {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="inline-flex items-center gap-3 px-5 py-2.5 bg-gradient-to-r from-gold-500/20 to-gold-600/10 rounded-full border border-gold-500/30 mb-8"
-            >
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-              >
-                <Diamond className="w-4 h-4 text-gold-400" />
-              </motion.div>
+            <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-gradient-to-r from-gold-500/20 to-gold-600/10 rounded-full border border-gold-500/30 mb-8">
+              <Diamond className="w-4 h-4 text-gold-400" />
               <span className="text-gold-400 font-sans text-sm tracking-widest uppercase">
                 Premium Wellness Destination
               </span>
@@ -112,55 +102,31 @@ export default function Hero() {
                   <Star key={i} className="w-3 h-3 text-gold-400 fill-gold-400" />
                 ))}
               </div>
-            </motion.div>
+            </div>
 
-            {/* Main Title with Reveal Animation */}
+            {/* Main Title */}
             <div className="space-y-2 mb-8">
-              <div className="overflow-hidden">
-                <motion.h1
-                  initial={{ y: "100%" }}
-                  animate={{ y: 0 }}
-                  transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                  className="font-serif text-6xl sm:text-7xl lg:text-8xl xl:text-9xl text-white font-light tracking-tight"
-                >
-                  Elevate
-                </motion.h1>
-              </div>
-              <div className="overflow-hidden">
-                <motion.h1
-                  initial={{ y: "100%" }}
-                  animate={{ y: 0 }}
-                  transition={{ duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  className="font-serif text-6xl sm:text-7xl lg:text-8xl xl:text-9xl font-light tracking-tight"
-                >
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 via-gold-400 to-gold-600">
-                    Your Soul
-                  </span>
-                </motion.h1>
-              </div>
+              <h1 className="font-serif text-6xl sm:text-7xl lg:text-8xl xl:text-9xl text-white font-light tracking-tight">
+                Elevate
+              </h1>
+              <h1 className="font-serif text-6xl sm:text-7xl lg:text-8xl xl:text-9xl font-light tracking-tight">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 via-gold-400 to-gold-600">
+                  Your Soul
+                </span>
+              </h1>
             </div>
 
             {/* Description */}
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.7 }}
-              className="font-sans text-xl text-white/60 max-w-lg mb-10 leading-relaxed"
-            >
+            <p className="font-sans text-xl text-white/60 max-w-lg mb-10 leading-relaxed">
               Step into a realm where ancient healing meets modern luxury. 
               Every moment is crafted to transform your wellness journey.
-            </motion.p>
+            </p>
 
             {/* CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.9 }}
-              className="flex flex-wrap gap-4"
-            >
+            <div className="flex flex-wrap gap-4">
               {/* Primary CTA */}
               <Link
-                href="#booking"
+                href="/booking"
                 className="group relative inline-flex items-center gap-3 px-8 py-5 bg-gradient-to-r from-gold-500 to-gold-600 text-charcoal-950 font-sans font-bold tracking-wide rounded-full overflow-hidden shadow-2xl shadow-gold-500/30 hover:shadow-gold-500/50 transition-shadow"
               >
                 <span className="relative z-10">Begin Your Journey</span>
@@ -190,15 +156,10 @@ export default function Hero() {
                 </motion.div>
                 <span>Watch Experience</span>
               </button>
-            </motion.div>
+            </div>
 
             {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.1 }}
-              className="flex gap-10 mt-16 pt-10 border-t border-white/10"
-            >
+            <div className="flex gap-10 mt-16 pt-10 border-t border-white/10">
               {[
                 { value: "15+", label: "Years Excellence" },
                 { value: "10K+", label: "Happy Clients" },
@@ -209,16 +170,11 @@ export default function Hero() {
                   <div className="font-sans text-sm text-white/40">{stat.label}</div>
                 </div>
               ))}
-            </motion.div>
+            </div>
           </div>
 
           {/* Right Side - Image Composition */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.2, delay: 0.5 }}
-            className="relative hidden lg:block"
-          >
+          <div className="relative hidden lg:block">
             {/* Main Image */}
             <motion.div
               style={{
@@ -247,10 +203,7 @@ export default function Hero() {
             </motion.div>
 
             {/* Floating Cards */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 1 }}
+            <div
               className="absolute -left-20 top-20 z-20"
             >
               <motion.div
@@ -268,28 +221,19 @@ export default function Hero() {
                   </div>
                 </div>
               </motion.div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 1.2 }}
-              className="absolute -right-10 bottom-32 z-20"
-            >
-              <motion.div
-                animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 5, repeat: Infinity }}
-                className="bg-gradient-to-br from-gold-500 to-gold-600 rounded-2xl p-5 shadow-xl shadow-gold-500/30"
-              >
+            <div className="absolute -right-10 bottom-32 z-20">
+              <div className="bg-gradient-to-br from-gold-500 to-gold-600 rounded-2xl p-5 shadow-xl shadow-gold-500/30">
                 <div className="text-charcoal-950">
                   <div className="font-serif text-2xl font-bold">Open Today</div>
                   <div className="font-sans text-sm opacity-80">10 AM - 8 PM</div>
                 </div>
-              </motion.div>
-            </motion.div>
-          </motion.div>
+              </div>
+            </div>
+          </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Scroll Indicator */}
       <motion.div
@@ -299,7 +243,7 @@ export default function Hero() {
         className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20"
       >
         <Link
-          href="#services"
+          href="/services"
           className="flex flex-col items-center gap-3 text-white/40 hover:text-gold-400 transition-colors group"
         >
           <motion.div

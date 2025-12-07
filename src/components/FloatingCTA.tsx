@@ -2,11 +2,13 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
-import { Phone, X, Calendar, MessageCircle, ChevronUp } from "lucide-react";
+import { Phone, X, Calendar, MessageCircle, ChevronUp, Zap } from "lucide-react";
+import { useToast } from "./ToastProvider";
 
 export default function FloatingCTA() {
   const [isOpen, setIsOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const { showToast } = useToast();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,7 +33,7 @@ export default function FloatingCTA() {
     {
       icon: Calendar,
       label: "Book Online",
-      href: "#booking",
+      href: "/booking",
       color: "bg-gold-500 hover:bg-gold-600",
     },
     {
@@ -39,6 +41,13 @@ export default function FloatingCTA() {
       label: "WhatsApp",
       href: "https://wa.me/19733103720",
       color: "bg-emerald-500 hover:bg-emerald-600",
+    },
+    {
+      icon: Zap,
+      label: "Quick Book",
+      href: "/booking",
+      color: "bg-charcoal-900 hover:bg-charcoal-800",
+      quick: true,
     },
   ];
 
@@ -77,6 +86,18 @@ export default function FloatingCTA() {
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ delay: index * 0.1 }}
                 className={`flex items-center gap-3 ${action.color} text-white pl-4 pr-5 py-3 rounded-full shadow-lg transition-all hover:scale-105 group`}
+                onClick={(e) => {
+                  if (action.quick) {
+                    e.preventDefault();
+                    window.dispatchEvent(
+                      new CustomEvent("quick-book", {
+                        detail: { service: "Signature Massage", time: "Next Available" },
+                      })
+                    );
+                    showToast("Quick booking filled. Scroll to the form.", "success");
+                    document.getElementById("booking")?.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
               >
                 <action.icon className="w-5 h-5" />
                 <span className="font-sans text-sm font-medium whitespace-nowrap">

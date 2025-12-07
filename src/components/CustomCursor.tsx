@@ -1,32 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
 export default function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
-  const [isClicking, setIsClicking] = useState(false);
-  const [cursorText, setCursorText] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
 
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 
-  const springConfig = { damping: 25, stiffness: 400 };
+  const springConfig = { damping: 30, stiffness: 500 };
   const cursorXSpring = useSpring(cursorX, springConfig);
   const cursorYSpring = useSpring(cursorY, springConfig);
 
+  const moveCursor = useCallback((e: MouseEvent) => {
+    cursorX.set(e.clientX);
+    cursorY.set(e.clientY);
+    if (!isVisible) setIsVisible(true);
+  }, [cursorX, cursorY, isVisible]);
+
   useEffect(() => {
-    const moveCursor = (e: MouseEvent) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
-    };
-
-    const handleMouseDown = () => setIsClicking(true);
-    const handleMouseUp = () => setIsClicking(false);
-
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      
       if (
         target.tagName === "A" ||
         target.tagName === "BUTTON" ||
@@ -35,76 +31,84 @@ export default function CustomCursor() {
         target.dataset.cursor === "pointer"
       ) {
         setIsHovering(true);
-        setCursorText(target.dataset.cursorText || "");
       }
     };
 
     const handleMouseOut = () => {
       setIsHovering(false);
-      setCursorText("");
+    };
+
+    const handleMouseLeave = () => {
+      setIsVisible(false);
+    };
+
+    const handleMouseEnter = () => {
+      setIsVisible(true);
     };
 
     window.addEventListener("mousemove", moveCursor);
-    window.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mouseup", handleMouseUp);
     document.addEventListener("mouseover", handleMouseOver);
     document.addEventListener("mouseout", handleMouseOut);
+    document.body.addEventListener("mouseleave", handleMouseLeave);
+    document.body.addEventListener("mouseenter", handleMouseEnter);
 
     return () => {
       window.removeEventListener("mousemove", moveCursor);
-      window.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mouseup", handleMouseUp);
       document.removeEventListener("mouseover", handleMouseOver);
       document.removeEventListener("mouseout", handleMouseOut);
+      document.body.removeEventListener("mouseleave", handleMouseLeave);
+      document.body.removeEventListener("mouseenter", handleMouseEnter);
     };
-  }, [cursorX, cursorY]);
+  }, [moveCursor]);
+
+  // Only show on desktop
+  if (typeof window !== "undefined" && window.innerWidth < 1024) {
+    return null;
+  }
 
   return (
     <>
-      {/* Main cursor dot - decorative effect that follows cursor */}
+      {/* Small golden dot */}
       <motion.div
-        className="fixed top-0 left-0 w-2 h-2 bg-gold-500/70 rounded-full pointer-events-none z-[9999] hidden lg:block"
+        className="fixed top-0 left-0 pointer-events-none z-[9999] hidden lg:block"
         style={{
           x: cursorXSpring,
           y: cursorYSpring,
-          translateX: "-50%",
-          translateY: "-50%",
         }}
         animate={{
-          scale: isClicking ? 0.5 : 1,
+          opacity: isVisible ? 1 : 0,
+          scale: isHovering ? 0.5 : 1,
         }}
         transition={{ duration: 0.15 }}
-      />
+      >
+        <div 
+          className="w-2 h-2 bg-gold-400 rounded-full"
+          style={{ transform: "translate(-50%, -50%)" }}
+        />
+      </motion.div>
 
       {/* Cursor ring */}
       <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9998] hidden lg:flex items-center justify-center"
+        className="fixed top-0 left-0 pointer-events-none z-[9998] hidden lg:block"
         style={{
           x: cursorXSpring,
           y: cursorYSpring,
-          translateX: "-50%",
-          translateY: "-50%",
         }}
         animate={{
-          width: isHovering ? 80 : 40,
-          height: isHovering ? 80 : 40,
-          backgroundColor: isHovering ? "rgba(212, 168, 83, 0.1)" : "transparent",
-          borderColor: isHovering ? "rgba(212, 168, 83, 0.5)" : "rgba(212, 168, 83, 0.3)",
+          opacity: isVisible ? 1 : 0,
+          width: isHovering ? 48 : 32,
+          height: isHovering ? 48 : 32,
         }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-        className="border-2 rounded-full"
+        transition={{ duration: 0.2, ease: "easeOut" }}
       >
-        {cursorText && (
-          <motion.span
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-gold-500 text-xs font-sans font-medium"
-          >
-            {cursorText}
-          </motion.span>
-        )}
+        <div 
+          className="w-full h-full rounded-full border border-gold-400/40"
+          style={{ 
+            transform: "translate(-50%, -50%)",
+            backgroundColor: isHovering ? "rgba(212, 168, 83, 0.1)" : "transparent",
+          }}
+        />
       </motion.div>
     </>
   );
 }
-

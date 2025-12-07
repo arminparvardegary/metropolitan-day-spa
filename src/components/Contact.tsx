@@ -2,13 +2,14 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { MapPin, Phone, Clock, Mail, Instagram, Facebook, Sparkles, Navigation, ExternalLink } from "lucide-react";
+import { MapPin, Phone, Clock, Mail, Instagram, Facebook, Sparkles, Navigation, ExternalLink, LocateFixed } from "lucide-react";
+import { useToast } from "./ToastProvider";
 
 const contactInfo = [
   {
     icon: MapPin,
     title: "Visit Us",
-    details: ["550 Kinderkamack Rd", "Oradell, NJ 07649"],
+    details: ["1122 Goffle Road", "Hawthorne, NJ 07506"],
     color: "from-rose-400 to-rose-600",
   },
   {
@@ -20,19 +21,19 @@ const contactInfo = [
   {
     icon: Mail,
     title: "Email Us",
-    details: ["info@metrodayspa.com"],
+    details: ["support@metrodayspa.com"],
     color: "from-violet-400 to-violet-600",
   },
 ];
 
 const hours = [
-  { day: "Monday", hours: "10:00 AM - 7:00 PM" },
-  { day: "Tuesday", hours: "10:00 AM - 7:00 PM" },
-  { day: "Wednesday", hours: "10:00 AM - 7:00 PM" },
-  { day: "Thursday", hours: "10:00 AM - 8:00 PM" },
-  { day: "Friday", hours: "10:00 AM - 8:00 PM" },
+  { day: "Monday", hours: "9:30 AM - 7:00 PM" },
+  { day: "Tuesday", hours: "9:30 AM - 7:00 PM" },
+  { day: "Wednesday", hours: "9:30 AM - 7:00 PM" },
+  { day: "Thursday", hours: "9:30 AM - 7:00 PM" },
+  { day: "Friday", hours: "9:30 AM - 7:00 PM" },
   { day: "Saturday", hours: "9:00 AM - 6:00 PM" },
-  { day: "Sunday", hours: "Closed" },
+  { day: "Sunday", hours: "10:00 AM - 6:00 PM" },
 ];
 
 export default function Contact() {
@@ -40,6 +41,7 @@ export default function Contact() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   
   const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+  const { showToast } = useToast();
 
   return (
     <section id="contact" className="relative py-32 overflow-hidden bg-charcoal-950">
@@ -204,7 +206,7 @@ export default function Contact() {
                 {/* Map Container */}
                 <div className="aspect-[4/3] lg:aspect-square bg-charcoal-900">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3014.8692374729247!2d-74.03715268459377!3d40.95547987930328!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c2e7f9c1c1c1c1%3A0x1234567890abcdef!2s550%20Kinderkamack%20Rd%2C%20Oradell%2C%20NJ%2007649!5e0!3m2!1sen!2sus!4v1234567890123"
+                    src="https://maps.google.com/maps?q=1122+Goffle+Road,+Hawthorne,+NJ+07506&t=&z=15&ie=UTF8&iwloc=&output=embed"
                     width="100%"
                     height="100%"
                     style={{ border: 0, filter: "grayscale(100%) invert(92%) contrast(83%)" }}
@@ -226,19 +228,44 @@ export default function Contact() {
                     <div className="flex items-center justify-between">
                       <div>
                         <h4 className="font-serif text-white text-lg mb-1">Metropolitan Day Spa</h4>
-                        <p className="font-sans text-white/60 text-sm">550 Kinderkamack Rd, Oradell</p>
+                        <p className="font-sans text-white/60 text-sm">1122 Goffle Rd, Hawthorne, NJ</p>
                       </div>
-                      <motion.a
-                        href="https://maps.google.com/?q=550+Kinderkamack+Rd+Oradell+NJ"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-gold-500 to-gold-600 text-white rounded-full font-sans text-sm shadow-lg"
-                      >
-                        <span>Directions</span>
-                        <ExternalLink className="w-4 h-4" />
-                      </motion.a>
+                      <div className="flex items-center gap-2">
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => {
+                            if (!navigator.geolocation) {
+                              showToast("Geolocation is not available", "error");
+                              return;
+                            }
+                            navigator.geolocation.getCurrentPosition(
+                              (pos) => {
+                                const { latitude, longitude } = pos.coords;
+                                const url = `https://www.google.com/maps/dir/${latitude},${longitude}/1122+Goffle+Rd+Hawthorne+NJ+07506`;
+                                window.open(url, "_blank");
+                                showToast("Opened directions from your location", "success");
+                              },
+                              () => showToast("Location permission denied", "error")
+                            );
+                          }}
+                          className="flex items-center gap-2 px-3 py-2 bg-white/10 text-white rounded-full border border-white/20 text-xs"
+                        >
+                          <LocateFixed className="w-4 h-4" />
+                          My route
+                        </motion.button>
+                        <motion.a
+                          href="https://maps.google.com/?q=1122+Goffle+Rd+Hawthorne+NJ+07506"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-gold-500 to-gold-600 text-white rounded-full font-sans text-sm shadow-lg"
+                        >
+                          <span>Directions</span>
+                          <ExternalLink className="w-4 h-4" />
+                        </motion.a>
+                      </div>
                     </div>
                   </div>
                 </motion.div>

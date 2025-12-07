@@ -13,6 +13,7 @@ const testimonials = [
     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1974&auto=format&fit=crop",
     rating: 5,
     text: "Metropolitan Day Spa is my absolute favorite escape! The atmosphere is so peaceful, and every treatment I've had has been exceptional. The staff truly goes above and beyond to ensure you feel pampered and relaxed.",
+    service: "Massage",
   },
   {
     id: 2,
@@ -21,6 +22,7 @@ const testimonials = [
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974&auto=format&fit=crop",
     rating: 5,
     text: "I was skeptical about spa treatments, but after my first visit here, I'm a convert. The deep tissue massage was incredible, and the aromatherapy session left me feeling rejuvenated for days.",
+    service: "Massage",
   },
   {
     id: 3,
@@ -29,6 +31,7 @@ const testimonials = [
     avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop",
     rating: 5,
     text: "From the moment I walked in, I knew this was a special place. The attention to detail, the soothing ambiance, and the skilled therapists made my experience unforgettable. Already booked my next appointment!",
+    service: "Facial",
   },
   {
     id: 4,
@@ -37,6 +40,7 @@ const testimonials = [
     avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1974&auto=format&fit=crop",
     rating: 5,
     text: "As a member for over 3 years, I can confidently say that the quality and service at Metropolitan Day Spa is unmatched. The team remembers my preferences and always delivers a personalized experience.",
+    service: "Body",
   },
 ];
 
@@ -45,23 +49,29 @@ export default function Testimonials() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [filter, setFilter] = useState<"All" | "Massage" | "Facial" | "Body">("All");
+
+  const filteredTestimonials = testimonials.filter(
+    (t) => filter === "All" || t.service === filter
+  );
+  const safeTestimonials = filteredTestimonials.length ? filteredTestimonials : testimonials;
 
   useEffect(() => {
     const timer = setInterval(() => {
       setDirection(1);
-      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+      setCurrentIndex((prev) => (prev + 1) % safeTestimonials.length);
     }, 6000);
     return () => clearInterval(timer);
-  }, []);
+  }, [safeTestimonials.length]);
 
   const handlePrev = () => {
     setDirection(-1);
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    setCurrentIndex((prev) => (prev - 1 + safeTestimonials.length) % safeTestimonials.length);
   };
 
   const handleNext = () => {
     setDirection(1);
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    setCurrentIndex((prev) => (prev + 1) % safeTestimonials.length);
   };
 
   const slideVariants = {
@@ -137,6 +147,26 @@ export default function Testimonials() {
           </p>
         </motion.div>
 
+        {/* Filters */}
+        <div className="flex flex-wrap justify-center gap-2 mb-8">
+          {["All", "Massage", "Facial", "Body"].map((item) => (
+            <button
+              key={item}
+              onClick={() => {
+                setFilter(item as any);
+                setCurrentIndex(0);
+              }}
+              className={`px-4 py-2 rounded-full text-sm border transition-colors ${
+                filter === item
+                  ? "bg-charcoal-900 text-white border-charcoal-900"
+                  : "bg-white border-cream-200 text-charcoal-700 hover:border-gold-400"
+              }`}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+
         {/* Testimonial Slider */}
         <div className="relative max-w-4xl mx-auto">
           {/* Navigation Buttons */}
@@ -182,7 +212,7 @@ export default function Testimonials() {
 
                   {/* Stars */}
                   <div className="flex gap-1 mb-6 justify-center">
-                    {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
+                  {[...Array(safeTestimonials[currentIndex].rating)].map((_, i) => (
                       <motion.div
                         key={i}
                         initial={{ opacity: 0, scale: 0 }}
@@ -196,24 +226,24 @@ export default function Testimonials() {
 
                   {/* Testimonial Text */}
                   <p className="font-serif text-xl md:text-2xl text-charcoal-800 text-center leading-relaxed mb-8 italic">
-                    &ldquo;{testimonials[currentIndex].text}&rdquo;
+                  &ldquo;{safeTestimonials[currentIndex].text}&rdquo;
                   </p>
 
                   {/* Author */}
                   <div className="flex flex-col items-center">
                     <div className="relative w-16 h-16 rounded-full overflow-hidden mb-3 ring-4 ring-gold-100">
                       <Image
-                        src={testimonials[currentIndex].avatar}
-                        alt={testimonials[currentIndex].name}
+                      src={safeTestimonials[currentIndex].avatar}
+                      alt={safeTestimonials[currentIndex].name}
                         fill
                         className="object-cover"
                       />
                     </div>
                     <h4 className="font-serif text-lg text-charcoal-900 font-medium">
-                      {testimonials[currentIndex].name}
+                    {safeTestimonials[currentIndex].name}
                     </h4>
                     <span className="font-sans text-sm text-gold-600">
-                      {testimonials[currentIndex].role}
+                    {safeTestimonials[currentIndex].role} • {safeTestimonials[currentIndex].service}
                     </span>
                   </div>
                 </div>
@@ -223,7 +253,7 @@ export default function Testimonials() {
 
           {/* Dots Indicator */}
           <div className="flex justify-center gap-2 mt-8">
-            {testimonials.map((_, index) => (
+          {safeTestimonials.map((_, index) => (
               <motion.button
                 key={index}
                 onClick={() => {
