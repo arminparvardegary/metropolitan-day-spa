@@ -8,7 +8,10 @@ import { useRef, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 
 // Dynamically import Scene3D to avoid SSR issues with Three.js
-const Scene3D = dynamic(() => import("./Scene3D"), { ssr: false });
+const Scene3D = dynamic(() => import("./Scene3D"), { 
+  ssr: false,
+  loading: () => null // Don't show anything while loading 3D
+});
 
 const floatingImages = [
   { src: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=400", delay: 0 },
@@ -71,8 +74,8 @@ export default function Hero() {
         className="absolute bottom-0 right-0 w-[800px] h-[800px] rounded-full bg-gradient-to-tl from-gold-600/15 to-transparent blur-[150px] pointer-events-none"
       />
 
-      {/* Floating Sparkles */}
-      {[...Array(30)].map((_, i) => (
+      {/* Floating Sparkles - Reduced for performance */}
+      {[...Array(12)].map((_, i) => (
         <motion.div
           key={i}
           className="absolute w-1 h-1 bg-gold-400 rounded-full pointer-events-none"
@@ -83,12 +86,12 @@ export default function Hero() {
           }}
           animate={{
             y: [null, "-100vh"],
-            opacity: [0, 1, 0],
+            opacity: [0, 0.8, 0],
           }}
           transition={{
-            duration: Math.random() * 5 + 5,
+            duration: Math.random() * 4 + 6,
             repeat: Infinity,
-            delay: Math.random() * 5,
+            delay: Math.random() * 3,
           }}
         />
       ))}
