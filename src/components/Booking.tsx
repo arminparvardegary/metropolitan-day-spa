@@ -27,10 +27,47 @@ export default function Booking() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [selectedService, setSelectedService] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
   const [formStep, setFormStep] = useState(1);
   const [therapist, setTherapist] = useState("");
   const [notes, setNotes] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const { showToast } = useToast();
+
+  const saveBooking = () => {
+    const booking = {
+      id: Date.now().toString(),
+      name,
+      email,
+      phone,
+      service: selectedService,
+      date: selectedDate || new Date().toLocaleDateString(),
+      time: selectedTime,
+      therapist,
+      notes,
+      status: "pending" as const,
+      createdAt: new Date().toISOString(),
+    };
+
+    const existingBookings = JSON.parse(localStorage.getItem("spa_bookings") || "[]");
+    existingBookings.push(booking);
+    localStorage.setItem("spa_bookings", JSON.stringify(existingBookings));
+
+    // Reset form
+    setSelectedService("");
+    setSelectedTime("");
+    setSelectedDate("");
+    setFormStep(1);
+    setTherapist("");
+    setNotes("");
+    setName("");
+    setPhone("");
+    setEmail("");
+
+    showToast("Booking confirmed! We'll contact you shortly.", "success");
+  };
 
   useEffect(() => {
     const listener = (e: Event) => {
@@ -241,7 +278,10 @@ export default function Booking() {
                     <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal-400" />
                     <input
                       type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                       placeholder="Your Name"
+                      required
                       className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-charcoal-700 bg-charcoal-800 focus:border-gold-500 focus:ring-0 font-sans text-white placeholder:text-charcoal-400 transition-colors"
                     />
                   </div>
@@ -249,36 +289,51 @@ export default function Booking() {
                     <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal-400" />
                     <input
                       type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
                       placeholder="Phone Number"
+                      required
                       className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-charcoal-700 bg-charcoal-800 focus:border-gold-500 focus:ring-0 font-sans text-white placeholder:text-charcoal-400 transition-colors"
                     />
                   </div>
-                <div className="relative">
-                  <UserCheck className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal-400" />
-                  <input
-                    type="text"
-                    value={therapist}
-                    onChange={(e) => setTherapist(e.target.value)}
-                    placeholder="Preferred Therapist (Optional)"
-                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-charcoal-700 bg-charcoal-800 focus:border-gold-500 focus:ring-0 font-sans text-white placeholder:text-charcoal-400 transition-colors"
-                  />
-                </div>
-                  <div className="relative md:col-span-2">
+                  <div className="relative">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal-400" />
                     <input
                       type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       placeholder="Email Address"
+                      required
                       className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-charcoal-700 bg-charcoal-800 focus:border-gold-500 focus:ring-0 font-sans text-white placeholder:text-charcoal-400 transition-colors"
                     />
                   </div>
-                <div className="md:col-span-2">
-                  <textarea
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
-                    placeholder="Notes or special requests"
-                    className="w-full rounded-xl border-2 border-charcoal-700 bg-charcoal-800 focus:border-gold-500 focus:ring-0 font-sans text-white placeholder:text-charcoal-400 transition-colors px-4 py-3 min-h-[110px]"
-                  />
-                </div>
+                  <div className="relative">
+                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal-400" />
+                    <input
+                      type="date"
+                      value={selectedDate}
+                      onChange={(e) => setSelectedDate(e.target.value)}
+                      className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-charcoal-700 bg-charcoal-800 focus:border-gold-500 focus:ring-0 font-sans text-white placeholder:text-charcoal-400 transition-colors"
+                    />
+                  </div>
+                  <div className="relative">
+                    <UserCheck className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal-400" />
+                    <input
+                      type="text"
+                      value={therapist}
+                      onChange={(e) => setTherapist(e.target.value)}
+                      placeholder="Preferred Therapist (Optional)"
+                      className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-charcoal-700 bg-charcoal-800 focus:border-gold-500 focus:ring-0 font-sans text-white placeholder:text-charcoal-400 transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <textarea
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      placeholder="Notes or special requests"
+                      className="w-full rounded-xl border-2 border-charcoal-700 bg-charcoal-800 focus:border-gold-500 focus:ring-0 font-sans text-white placeholder:text-charcoal-400 transition-colors px-4 py-3 min-h-[110px]"
+                    />
+                  </div>
                 </div>
 
                 {/* Summary */}
@@ -324,15 +379,20 @@ export default function Booking() {
                   if (formStep < 3) {
                     setFormStep(formStep + 1);
                   } else {
-                    showToast("Booking request submitted. We will contact you shortly.", "success");
+                    if (!name || !email || !phone) {
+                      showToast("Please fill in all required fields.", "error");
+                      return;
+                    }
+                    saveBooking();
                   }
                 }}
                 disabled={
                   (formStep === 1 && !selectedService) ||
-                  (formStep === 2 && !selectedTime)
+                  (formStep === 2 && !selectedTime) ||
+                  (formStep === 3 && (!name || !email || !phone))
                 }
                 className={`ml-auto flex items-center gap-2 px-8 py-4 rounded-full font-sans font-medium tracking-wide transition-all duration-300 ${
-                  ((formStep === 1 && !selectedService) || (formStep === 2 && !selectedTime))
+                  ((formStep === 1 && !selectedService) || (formStep === 2 && !selectedTime) || (formStep === 3 && (!name || !email || !phone)))
                     ? "bg-charcoal-700 text-gray-500 cursor-not-allowed"
                     : "bg-gradient-to-r from-gold-500 to-gold-600 text-white shadow-lg hover:shadow-xl"
                 }`}
