@@ -3,7 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import Image from "next/image";
 import { useMemo, useRef, useState } from "react";
-import { ArrowUpRight, Star, Clock, Sparkles, Crown, Zap, Filter } from "lucide-react";
+import { ArrowUpRight, Star, Clock, Crown, Zap, Filter } from "lucide-react";
 
 const services = [
   {

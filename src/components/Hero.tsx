@@ -1,35 +1,20 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
-import { ChevronDown, Sparkles, Star, Play, ArrowRight, Diamond } from "lucide-react";
+import { Sparkles, Star, Play, ArrowRight, Diamond } from "lucide-react";
 import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 
-// Dynamically import Scene3D to avoid SSR issues with Three.js
 const Scene3D = dynamic(() => import("./Scene3D"), { 
   ssr: false,
-  loading: () => null // Don't show anything while loading 3D
+  loading: () => null
 });
-
-const floatingImages = [
-  { src: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=400", delay: 0 },
-  { src: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=400", delay: 0.2 },
-  { src: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=400", delay: 0.4 },
-];
 
 export default function Hero() {
   const ref = useRef(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
